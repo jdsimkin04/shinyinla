@@ -1,0 +1,166 @@
+#!/bin/bash
+set -u
+
+INLA_VERSION=$(echo $INLA_TAG | awk -F_ '{print $2}')
+rm INLA*tar.gz INLA*tgz INLA*zip || true
+
+date=$(date)
+D=r-inla/rinla/R
+DD=INLA/R
+RVersion=$(R --vanilla --version | grep '^R version' | awk '{print $3}' | awk -F. '{print $1 "." $2}')
+
+## We need to remove these as we change them
+for f in INLA/NAMESPACE INLA/DESCRIPTION; do
+    test -f $f && rm -f $f
+done
+
+## make man-pages, compile doc-pdf's and run roxygen
+make -C $D/../.. -B
+
+rsync -auvL --delete --exclude '/*~' --exclude TAGS $D/.. INLA/. 
+if [ -d $D/../inst/bin/linux/64bit/first ]; then
+    rsync -auv $D/../inst/bin/linux/64bit/first/. $DD/../inst/bin/linux/64bit/first/.
+fi
+./updateBin
+
+tt=.tt
+test -f $tt && rm -rf $tt
+cat $D/version.R | \
+    awk '/^[ \t]*date *<-/{       print "    date       <- ", "inla.trim(\"" date    "\")"; next;}
+         /^[ \t]*version *<-/{      print "    version      <- ", "inla.trim(\"" version   "\")"; next;}
+	 {print}' date="$date" version="$INLA_VERSION" > $tt
+cp $tt $D/version.R
+mv -f $tt $DD/version.R
+
+cat $D/version.R
+cat $DD/version.R
+
+## Modify the DESCRIPTION file
+desc="INLA/DESCRIPTION"
+{
+    egrep -v '^(Version:|Date:)' r-inla/rinla/DESCRIPTION
+    echo "Version: $INLA_VERSION"
+    echo "Date: $(date) ($INLA_TAG)"
+} > $tt && mv -f $tt $desc
+ 
+~hrue/bin/fix-permissions INLA
+
+mf="INLA.pdf"
+test -f $mf && rm -f $mf
+R --vanilla CMD Rd2pdf --no-preview --batch INLA >/dev/null 2>&1 || exit 1
+md="INLA/inst/doc/manual"
+test -d $md || mkdir $md
+cp $mf $md/$mf
+
+SRC=INLA-source.tgz
+tar cvfzh INLA-source.tgz INLA
+
+
+## If required, build with ``--no-build-vignettes''
+if R --vanilla CMD build --keep-empty-dirs --resave-data --log INLA; then
+    echo '*** Build OK'
+else
+    if R --vanilla CMD build --keep-empty-dirs --no-build-vignettes --resave-data --log INLA; then
+	echo '*** Build without rebuilding vignettes OK'
+    else
+	exit 1
+    fi
+fi
+
+INLA=$(echo INLA_*.tar.gz)
+tgzINLA=${INLA%%.tar.gz}.tgz
+mv $INLA $tgzINLA 
+
+zipINLA=${tgzINLA%%.tgz}.zip
+
+DD=$(echo ~/R/x86_64-redhat-linux-gnu-library/default)
+test -d $DD || mkdir -p $DD
+##export R_ENABLE_JIT=3
+export R_COMPILE_PKGS=1
+R --vanilla CMD INSTALL --library=$DD $tgzINLA || exit 1
+
+~/bin/fix-permissions $DD
+
+( cd $DD; zip -v -r $zipINLA INLA; )
+
+mv -f $DD/$zipINLA .
+
+ls -l INLA*gz INLA*zip
+www=../www
+wwwR=../www/R
+
+convert_to_mac_binary () {
+    for f in "$@"; do
+	ff=$(basename $f)
+	scp -v $f $INLA_MAC:$ff
+	ssh -x $INLA_MAC /usr/local/bin/R CMD INSTALL --build  $ff
+	scp -v $INLA_MAC:$ff $f
+    done
+}
+
+updateBinaryPackages () {
+    for d in "$@"; do
+	(
+	    echo "RUN ./updateBinaryPackages in dir=$d"
+	    cd "$d"
+	    ./updateBinaryPackages
+	)
+    done
+}
+    
+
+if [ $# -ge 1 -a "$1" == "1" ]; then
+    for prefix in stable testing; do
+	d=$wwwR/$prefix/src/contrib
+	cp -v $SRC $d/INLA_$INLA_VERSION.tar.gz
+	updateBinaryPackages $d
+	
+	d=$wwwR/$prefix/bin/macosx/contrib/$RVersion
+	cp -v $tgzINLA $d/INLA_$INLA_VERSION.tgz
+	convert_to_mac_binary $d/INLA_$INLA_VERSION.tgz
+	updateBinaryPackages $d
+
+	d=$wwwR/$prefix/bin/windows/contrib/$RVersion
+	cp -v $zipINLA $d/INLA_$INLA_VERSION.zip
+	updateBinaryPackages $d
+    done
+fi
+
+if [ $# -ge 1 -a "$1" == "2" ]; then
+    for prefix in testing; do
+	d=$wwwR/$prefix/src/contrib
+	cp -v $SRC $d/INLA_$INLA_VERSION.tar.gz
+	updateBinaryPackages $d
+	
+	d=$wwwR/$prefix/bin/macosx/contrib/$RVersion
+	cp -v $tgzINLA $d/INLA_$INLA_VERSION.tgz
+	convert_to_mac_binary $d/INLA_$INLA_VERSION.tgz
+	updateBinaryPackages $d
+
+	d=$wwwR/$prefix/bin/windows/contrib/$RVersion
+	cp -v $zipINLA $d/INLA_$INLA_VERSION.zip
+	updateBinaryPackages $d
+    done
+fi
+
+{
+    cat $D/upgrade.R | sed 's/inla.upgrade/inla.installer/g' | grep -v ^#
+    cat $D/os.R | grep -v ^#
+    echo ' '
+    echo '`givemeINLA` = function(...) inla.installer(...)'
+    echo 'if (!exists("inla.lib")) inla.lib = NULL'
+    echo 'givemeINLA(testing=FALSE, lib = inla.lib)'
+    echo 'cat("\n\n\nYou can later upgrade INLA using: inla.upgrade()\n")'
+} | sed 's/inla.os/inla.installer.os/g' >  $www/givemeINLA.R
+{
+    cat $D/upgrade.R | sed 's/inla.upgrade/inla.installer/g' | grep -v ^#
+    cat $D/os.R | grep -v ^#
+    echo ' '
+    echo '`givemeINLA` = function(...) inla.installer(...)'
+    echo 'if (!exists("inla.lib")) inla.lib = NULL'
+    echo 'givemeINLA(testing=TRUE, lib = inla.lib)'
+    echo 'cat("\n\n\nYou can later upgrade INLA using: inla.upgrade(testing=TRUE)\n")'
+} | sed 's/inla.os/inla.installer.os/g' >  $www/givemeINLA-testing.R
+
+rm -f $tgzINLA 
+rm -f $zipINLA 
