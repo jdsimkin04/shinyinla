@@ -1,3 +1,0 @@
-This example cannot be run without a special compiled version of the
-inla-program where some code in the function 'extra' are uncommeted
-out.
