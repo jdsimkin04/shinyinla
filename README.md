@@ -1,7 +1,1 @@
-# README #
-
-This respository contains the source code for the R-INLA project; see www.r-inla.org
-
-Precompiled version of the R-INLA package can be downloaded from www.r-inla-download.org
-
-Håvard Rue
+This is a read-only mirror of the R-INLA package. R-INLA package is maintained here www.r-inla.org and https://github.com/hrue/r-inla. Because the package is outside of CRAN and Github, this repo allows for easy shiny deployment.
