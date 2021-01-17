@@ -1,0 +1,37 @@
+%% DO NOT EDIT!
+%% This file is generated automatically from models.R
+\begin{description}
+	\item[doc] The Skew-Normal likelihoood
+	\item[hyper]\ 
+	 \begin{description}
+	 	\item[theta1]\ 
+	 	 \begin{description}
+	 	 	\item[hyperid] 74001
+	 	 	\item[name] log precision
+	 	 	\item[short.name] prec
+	 	 	\item[initial] 4
+	 	 	\item[fixed] FALSE
+	 	 	\item[prior] loggamma
+	 	 	\item[param] 1 5e-05
+	 	 	\item[to.theta] \verb!function(x) log(x)!
+	 	 	\item[from.theta] \verb!function(x) exp(x)!
+	 	 \end{description}
+	 	\item[theta2]\ 
+	 	 \begin{description}
+	 	 	\item[hyperid] 74002
+	 	 	\item[name] logit skewness
+	 	 	\item[short.name] skewness
+	 	 	\item[initial] 0.00123456789
+	 	 	\item[fixed] FALSE
+	 	 	\item[prior] pc.sn
+	 	 	\item[param] 10
+	 	 	\item[to.theta] \verb!function(x, skew.max = 0.988) log((1 + x / skew.max) / (1 - x / skew.max))!
+	 	 	\item[from.theta] \verb!function(x, skew.max = 0.988) skew.max * (2 * exp(x) / (1 + exp(x)) - 1)!
+	 	 \end{description}
+	 \end{description}
+	\item[status] experimental
+	\item[survival] FALSE
+	\item[discrete] FALSE
+	\item[link] default identity
+	\item[pdf] sn
+\end{description}
