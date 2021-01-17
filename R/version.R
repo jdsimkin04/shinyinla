@@ -40,8 +40,8 @@
         return(string)
     }
 
-    date <- trim("Thu 30 Jun 08:30:28 CEST 2016")
-    version <- trim("Version_12.34.56")
+    date       <-  inla.trim("Wed Jan 13 07:39:24 PM +03 2021")
+    version      <-  inla.trim("21.01.13")
     what <- match.arg(what)
 
     if (what %in% "default") {
