@@ -1,6 +1,7 @@
 Package: INLA
 Type: Package
-Title: Full Bayesian Analysis of Latent Gaussian Models using Integrated Nested Laplace Approximations
+Title: Full Bayesian Analysis of Latent Gaussian Models using
+        Integrated Nested Laplace Approximations
 Authors@R: c(
     person("Havard", "Rue", email = "hrue@r-inla.org", role = c("cre","aut")),
     person("Finn", "Lindgren", email = "finn.lindgren@gmail.com", role = "aut"),
@@ -13,168 +14,62 @@ Authors@R: c(
     person("Martin", "Modrak", email = "modrak.m@email.cz", role = "ctb"),
     person("Cristian", "Chiuchiolo", email = "cristian.chiuchiolo@kaust.edu.sa", role = "ctb"))
 Description: Full Bayesian analysis of latent Gaussian models using Integrated Nested Laplace Approximaxion. It is a front-end to the inla-program.
-Depends:
-    R (>= 3.5),
-    Matrix (>= 1.3-0),
-    foreach,
-    parallel,
-    sp (>= 1.4-2)
-Suggests:
-    Deriv,
-    Ecdat,
-    HKprocess,
-    MatrixModels,
-    Rgraphviz,
-    deldir,
-    devtools,
-    doParallel,
-    dplyr,
-    evd,
-    fields,
-    ggplot2,
-    graph,
-    gridExtra,
-    knitr,
-    markdown,
-    matrixStats,
-    mlogit,
-    mpoly,
-    mvtnorm,
-    numDeriv,
-    orthopolynom,
-    pixmap,
-    rgdal,
-    rgeos,
-    rgl,
-    rmarkdown,
-    shiny,
-    sn,
-    spdep,
-    splancs,
-    symmoments,
-    testthat,
-    tools
-Imports:
-    graphics,
-    grDevices,
-    methods,
-    splines,
-    stats,
-    utils
+Depends: R (>= 3.5), Matrix (>= 1.3-0), foreach, parallel, sp (>=
+        1.4-2)
+Suggests: Deriv, Ecdat, HKprocess, MatrixModels, Rgraphviz, deldir,
+        devtools, doParallel, dplyr, evd, fields, ggplot2, graph,
+        gridExtra, knitr, markdown, matrixStats, mlogit, mpoly,
+        mvtnorm, numDeriv, orthopolynom, pixmap, rgdal, rgeos, rgl,
+        rmarkdown, shiny, sn, spdep, splancs, symmoments, testthat,
+        tools
+Imports: graphics, grDevices, methods, splines, stats, utils
 VignetteBuilder: knitr
 BuildVignettes: true
 LazyData: true
 License: GPL (>= 2) + file LICENSE
-Version: 99.99.9999
-Date: 9999-99-99
 RoxygenNote: 7.1.1
 Encoding: UTF-8
 StagedInstall: no
-Collate: 
-    'INLA-package.R'
-    'agaussian.R'
-    'ar.R'
-    'barrier.R'
-    'binary.R'
-    'binary.install.R'
-    'changelog.R'
-    'collect.results.R'
-    'compare.results.R'
-    'coxph.R'
-    'cpo.R'
-    'create.data.file.R'
-    'cut.R'
-    'cygwin.R'
-    'debug.graph.R'
-    'dev.new.R'
-    'display.matrix.R'
-    'doc.R'
-    'expand.dataframe.R'
-    'export-class.R'
-    'f.R'
-    'fgn.R'
-    'finn.R'
-    'fmesher-io.R'
-    'fmesher.R'
-    'graph.convert.R'
-    'graph.matrix.R'
-    'group.R'
-    'hyper.R'
-    'hyperpar.R'
-    'idx.R'
-    'inla.R'
-    'inlaEnv.R'
-    'interpret.formula.R'
-    'jmarginal.R'
-    'jp.R'
-    'knmodels.R'
-    'knmodels.sample.R'
-    'lattice2node.R'
-    'lincomb.R'
-    'link-functions.R'
-    'list-models.R'
-    'load.R'
-    'marginal.R'
-    'mdata.R'
-    'merge.R'
-    'mesh.R'
-    'mesh.components.R'
-    'meshassessment.R'
-    'meshbuilder.R'
-    'model-wrapper.R'
-    'models-generate.R'
-    'models.R'
-    'nmix.lambda.fitted.R'
-    'obsolete.R'
-    'options.R'
-    'os.R'
-    'over_sp_mesh.R'
-    'pardiso.R'
-    'pc-alphaw.R'
-    'pc-ar.R'
-    'pc-bym.R'
-    'pc-cor0.R'
-    'pc-cor1.R'
-    'pc-cormat.R'
-    'pc-gamma.R'
-    'pc-gammacount.R'
-    'pc-gev.R'
-    'pc-multvar.R'
-    'pc-prec.R'
-    'pc-sn.R'
-    'pc-t.R'
-    'plot.R'
-    'posterior.sample.R'
-    'print.R'
-    'priors.used.R'
-    'prune.R'
-    'q.R'
-    'qinv.R'
-    'qreordering.R'
-    'qsample.R'
-    'qsolve.R'
-    'quantile-regression.R'
-    'read.graph.R'
-    'remote.R'
-    'reorderings.R'
-    'rerun.R'
-    'residuals.R'
-    'rgeneric.R'
-    'sampler.R'
-    'sandbox.R'
-    'scale.model.R'
-    'sections.R'
-    'set.default.arguments.R'
-    'sm.R'
-    'spde.common.R'
-    'spde1.R'
-    'spde2.R'
-    'spde3.R'
-    'spmesh.R'
-    'startup.R'
-    'summary.R'
-    'surv.R'
-    'upgrade.R'
-    'utils.R'
-    'version.R'
+Collate: 'INLA-package.R' 'agaussian.R' 'ar.R' 'barrier.R' 'binary.R'
+        'binary.install.R' 'changelog.R' 'collect.results.R'
+        'compare.results.R' 'coxph.R' 'cpo.R' 'create.data.file.R'
+        'cut.R' 'cygwin.R' 'debug.graph.R' 'dev.new.R'
+        'display.matrix.R' 'doc.R' 'expand.dataframe.R'
+        'export-class.R' 'f.R' 'fgn.R' 'finn.R' 'fmesher-io.R'
+        'fmesher.R' 'graph.convert.R' 'graph.matrix.R' 'group.R'
+        'hyper.R' 'hyperpar.R' 'idx.R' 'inla.R' 'inlaEnv.R'
+        'interpret.formula.R' 'jmarginal.R' 'jp.R' 'knmodels.R'
+        'knmodels.sample.R' 'lattice2node.R' 'lincomb.R'
+        'link-functions.R' 'list-models.R' 'load.R' 'marginal.R'
+        'mdata.R' 'merge.R' 'mesh.R' 'mesh.components.R'
+        'meshassessment.R' 'meshbuilder.R' 'model-wrapper.R'
+        'models-generate.R' 'models.R' 'nmix.lambda.fitted.R'
+        'obsolete.R' 'options.R' 'os.R' 'over_sp_mesh.R' 'pardiso.R'
+        'pc-alphaw.R' 'pc-ar.R' 'pc-bym.R' 'pc-cor0.R' 'pc-cor1.R'
+        'pc-cormat.R' 'pc-gamma.R' 'pc-gammacount.R' 'pc-gev.R'
+        'pc-multvar.R' 'pc-prec.R' 'pc-sn.R' 'pc-t.R' 'plot.R'
+        'posterior.sample.R' 'print.R' 'priors.used.R' 'prune.R' 'q.R'
+        'qinv.R' 'qreordering.R' 'qsample.R' 'qsolve.R'
+        'quantile-regression.R' 'read.graph.R' 'remote.R'
+        'reorderings.R' 'rerun.R' 'residuals.R' 'rgeneric.R'
+        'sampler.R' 'sandbox.R' 'scale.model.R' 'sections.R'
+        'set.default.arguments.R' 'sm.R' 'spde.common.R' 'spde1.R'
+        'spde2.R' 'spde3.R' 'spmesh.R' 'startup.R' 'summary.R' 'surv.R'
+        'upgrade.R' 'utils.R' 'version.R'
 Roxygen: list(markdown = TRUE)
+Version: 21.06.11
+Date: Fri Jun 11 02:52:16 PM +03 2021 (Version_21.06.11)
+NeedsCompilation: no
+Packaged: 2021-06-11 12:01:48 UTC; hrue
+Author: Havard Rue [cre, aut],
+  Finn Lindgren [aut],
+  Elias Teixeira Krainski [aut],
+  Sara Martino [ctb],
+  Haakon Bakka [ctb],
+  Daniel Simpson [ctb],
+  Andrea Riebler [ctb],
+  Geir-Arne Fuglstad [ctb],
+  Martin Modrak [ctb],
+  Cristian Chiuchiolo [ctb]
+Maintainer: Havard Rue <hrue@r-inla.org>
+Built: R 4.0.5; ; 2021-06-11 12:05:24 UTC; unix
