@@ -22,6 +22,8 @@
     if (is.null(y.orig)) {
         y.orig <- c(mf[, 1L])
     } else if (is.inla.surv(y.orig)) {
+        ## this is not passed into the inla-program
+        y.orig$.special <- NULL
         y.orig <- as.data.frame(unclass(y.orig))
     } else if (is.inla.mdata(y.orig)) {
         y.orig <- as.data.frame(unclass(y.orig))
@@ -142,7 +144,7 @@
 
         null.dat <- is.na(response[, 3L])
         response <- response[!null.dat, ]
-    } else if (inla.one.of(family, c("exponential", "weibull", "loglogistic", "gammajw"))) {
+    } else if (inla.one.of(family, c("exponential", "weibull", "loglogistic", "gammajw", "gompertz"))) {
         response <- cbind(ind, y.orig)
         null.dat <- is.na(response[, 2L])
         response <- response[!null.dat, ]
@@ -251,7 +253,7 @@
     } else if (inla.one.of(family, c(
         "exponentialsurv", "weibullsurv", "weibullcure",
         "loglogisticsurv", "qloglogisticsurv", "lognormalsurv",
-        "gammasurv", "gammajwsurv", "fmrisurv"))) {
+        "gammasurv", "gammajwsurv", "fmrisurv", "gompertzsurv"))) {
         if (!inla.model.properties(family, "likelihood")$survival) {
             file.remove(file)
             file.remove(data.dir)
@@ -292,8 +294,9 @@
             stop("NA in truncation/event/lower/upper/time is not allowed")
         }
     } else if (inla.one.of(family, c(
-        "stochvol", "stochvolt", "stochvolnig", "loggammafrailty",
-        "iidlogitbeta", "qkumar", "qloglogistic", "gp", "dgp", "pom"))) {
+        "stochvol", "stochvolt", "stochvolnig", "stochvolsn", "loggammafrailty",
+        "iidlogitbeta", "qkumar", "qloglogistic", "gp", "dgp", "pom",
+        "logperiodogram"))) {
         response <- cbind(ind, y.orig)
         null.dat <- is.na(response[, 2L])
         response <- response[!null.dat, ]
@@ -333,6 +336,45 @@
         ## although it is not required
         Y <- matrix(c(apply(Y, 1, function(x) c(sort(x[!is.na(x)]), x[is.na(x)]))), ncol = ncol(Y), byrow = TRUE)
         response <- cbind(idx, X, Y, yfake)
+    } else if (inla.one.of(family, c("agaussian"))) {
+        response <- cbind(IDX = ind, y.orig)
+        col.idx <- grep("^IDX$", names(response))
+        col.y <- grep("^Y[0-9]+", names(response))
+        m.y <- length(col.y)
+        stopifnot(m.y == 5L)
+        ## remove entries with NA's in all responses
+        na.y <- apply(response[, col.y, drop = FALSE], 1, function(x) all(is.na(x)))
+        response <- response[!na.y, , drop = FALSE]
+        Y <- response[, col.y, drop = FALSE]
+        idx <- response[, col.idx, drop = FALSE]
+        response <- cbind(idx, Y)
+    } else if (inla.one.of(family, c("cenpoisson2"))) {
+
+        if (is.null(E)) {
+            E <- rep(1, n.data)
+        }
+        if (length(E) == 1L) {
+            E <- rep(E, n.data)
+        }
+
+        response <- cbind(ind, E, y.orig)
+        stopifnot(ncol(response) == 5)
+        null.dat <- is.na(response[, 3L])
+        response <- response[!null.dat, ]
+        colnames(response) <- c("IDX", "E", "Y1", "Y2", "Y3")
+        idx.inf <- (is.infinite(response$Y3) | (response$Y3 < 0))
+        response[idx.inf, "Y3"] <- -1 ## code for infinite
+        idx.inf <- (is.infinite(response$Y2) | (response$Y2 < 0))
+        response[idx.inf, "Y2"] <- -1 ## code for infinite
+        col.idx <- grep("^IDX$", names(response))
+        col.y <- grep("^Y[0-9]+", names(response))
+        m.y <- length(col.y)
+        stopifnot(m.y == 3L)
+        ## remove entries with NA's in all responses
+        na.y <- apply(response[, col.y, drop = FALSE], 1, function(x) all(is.na(x)))
+        response <- response[!na.y, , drop = FALSE]
+        ## format: IDX, E, LOW, HIGH, Y
+        response <- cbind(IDX = response$IDX, E = response$E, LOW = response$Y2, HIGH = response$Y3, Y = response$Y1)
     } else if (inla.one.of(family, c("bgev"))) {
         if (is.null(scale)) {
             scale <- rep(1.0, n.data)

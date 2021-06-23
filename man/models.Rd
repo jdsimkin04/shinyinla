@@ -5954,7 +5954,7 @@ inla.models()
 						\item{Hyperparameter `theta1'}{
 							 \describe{
 							\item{hyperid = }{`49031'}
-							\item{name = }{`skew'}
+							\item{name = }{`skewness'}
 							\item{short.name = }{`skew'}
 							\item{initial = }{`0.00123456789'}
 							\item{fixed = }{`FALSE'}
@@ -6204,7 +6204,7 @@ inla.models()
 							\item{hyperid = }{`53001'}
 							\item{name = }{`log precision'}
 							\item{short.name = }{`prec'}
-							\item{initial = }{`12'}
+							\item{initial = }{`13.8155105579643'}
 							\item{fixed = }{`TRUE'}
 							\item{prior = }{`loggamma'}
 							\item{param = }{`1 1e-05'}
@@ -6216,7 +6216,7 @@ inla.models()
 					 \describe{
 						\item{Properties:}{
 							\describe{
-								\item{doc = }{`(not used)'}
+								\item{doc = }{`(do not use)'}
 							 }
 						 }
 					 }
@@ -6308,6 +6308,8 @@ inla.models()
 				\item{Model `xpoisson'.}{Number of hyperparmeters are 0.
 				 }
 				\item{Model `cenpoisson'.}{Number of hyperparmeters are 0.
+				 }
+				\item{Model `cenpoisson2'.}{Number of hyperparmeters are 0.
 				 }
 				\item{Model `gpoisson'.}{Number of hyperparmeters are 2.
 					 \describe{
@@ -7060,6 +7062,35 @@ inla.models()
 						 }
 					 }
 				 }
+				\item{Model `agaussian'.}{Number of hyperparmeters are 1.
+					 \describe{
+						\item{Hyperparameter `theta'}{
+							 \describe{
+							\item{hyperid = }{`66001'}
+							\item{name = }{`log precision'}
+							\item{short.name = }{`prec'}
+							\item{initial = }{`4'}
+							\item{fixed = }{`FALSE'}
+							\item{prior = }{`loggamma'}
+							\item{param = }{`1 5e-05'}
+							\item{to.theta = }{`\code{function(x) log(x)}'}
+							\item{from.theta = }{`\code{function(x) exp(x)}'}
+							}
+						}
+					 }
+					 \describe{
+						\item{Properties:}{
+							\describe{
+								\item{doc = }{`The aggregated Gaussian likelihoood'}
+								\item{status = }{`experimental'}
+								\item{survival = }{`FALSE'}
+								\item{discrete = }{`FALSE'}
+								\item{link = }{`default identity logit loga cauchit log logoffset'}
+								\item{pdf = }{`agaussian'}
+							 }
+						 }
+					 }
+				 }
 				\item{Model `circularnormal'.}{Number of hyperparmeters are 1.
 					 \describe{
 						\item{Hyperparameter `theta'}{
@@ -7277,8 +7308,8 @@ inla.models()
 						\item{Hyperparameter `theta2'}{
 							 \describe{
 							\item{hyperid = }{`74002'}
-							\item{name = }{`logit skewness'}
-							\item{short.name = }{`skewness'}
+							\item{name = }{`logit skew'}
+							\item{short.name = }{`skew'}
 							\item{initial = }{`0.00123456789'}
 							\item{fixed = }{`FALSE'}
 							\item{prior = }{`pc.sn'}
@@ -7412,7 +7443,7 @@ inla.models()
 							\item{hyperid = }{`79001'}
 							\item{name = }{`log alpha'}
 							\item{short.name = }{`alpha'}
-							\item{initial = }{`0.1'}
+							\item{initial = }{`-2'}
 							\item{fixed = }{`FALSE'}
 							\item{prior = }{`pc.alphaw'}
 							\item{param = }{`5'}
@@ -7440,7 +7471,7 @@ inla.models()
 							\item{hyperid = }{`79101'}
 							\item{name = }{`log alpha'}
 							\item{short.name = }{`alpha'}
-							\item{initial = }{`0.1'}
+							\item{initial = }{`-2'}
 							\item{fixed = }{`FALSE'}
 							\item{prior = }{`pc.alphaw'}
 							\item{param = }{`5'}
@@ -7582,6 +7613,48 @@ inla.models()
 								\item{discrete = }{`FALSE'}
 								\item{link = }{`default log'}
 								\item{pdf = }{`stochvolgaussian'}
+							 }
+						 }
+					 }
+				 }
+				\item{Model `stochvolsn'.}{Number of hyperparmeters are 2.
+					 \describe{
+						\item{Hyperparameter `theta1'}{
+							 \describe{
+							\item{hyperid = }{`82101'}
+							\item{name = }{`logit skew'}
+							\item{short.name = }{`skew'}
+							\item{initial = }{`0.00123456789'}
+							\item{fixed = }{`FALSE'}
+							\item{prior = }{`pc.sn'}
+							\item{param = }{`10'}
+							\item{to.theta = }{`\code{function(x, skew.max = 0.988) log((1 + x / skew.max) / (1 - x / skew.max))}'}
+							\item{from.theta = }{`\code{function(x, skew.max = 0.988) skew.max * (2 * exp(x) / (1 + exp(x)) - 1)}'}
+							}
+						}
+						\item{Hyperparameter `theta2'}{
+							 \describe{
+							\item{hyperid = }{`82102'}
+							\item{name = }{`log precision'}
+							\item{short.name = }{`prec'}
+							\item{initial = }{`500'}
+							\item{fixed = }{`TRUE'}
+							\item{prior = }{`loggamma'}
+							\item{param = }{`1 0.005'}
+							\item{to.theta = }{`\code{function(x) log(x)}'}
+							\item{from.theta = }{`\code{function(x) exp(x)}'}
+							}
+						}
+					 }
+					 \describe{
+						\item{Properties:}{
+							\describe{
+								\item{doc = }{`The SkewNormal stochvol likelihood'}
+								\item{status = }{`experimental'}
+								\item{survival = }{`FALSE'}
+								\item{discrete = }{`FALSE'}
+								\item{link = }{`default log'}
+								\item{pdf = }{`stochvolsn'}
 							 }
 						 }
 					 }
@@ -9344,6 +9417,64 @@ inla.models()
 								\item{discrete = }{`FALSE'}
 								\item{link = }{`default log'}
 								\item{pdf = }{`fmri'}
+							 }
+						 }
+					 }
+				 }
+				\item{Model `gompertz'.}{Number of hyperparmeters are 1.
+					 \describe{
+						\item{Hyperparameter `theta'}{
+							 \describe{
+							\item{hyperid = }{`105101'}
+							\item{name = }{`shape'}
+							\item{short.name = }{`alpha'}
+							\item{initial = }{`-20'}
+							\item{fixed = }{`FALSE'}
+							\item{prior = }{`normal'}
+							\item{param = }{`-20 0.01'}
+							\item{to.theta = }{`\code{function(x, sc = 0.1) log(x) / sc}'}
+							\item{from.theta = }{`\code{function(x, sc = 0.1) exp(sc * x)}'}
+							}
+						}
+					 }
+					 \describe{
+						\item{Properties:}{
+							\describe{
+								\item{doc = }{`gompertz distribution'}
+								\item{status = }{`experimental'}
+								\item{survival = }{`FALSE'}
+								\item{discrete = }{`FALSE'}
+								\item{link = }{`default log neglog'}
+								\item{pdf = }{`gompertz'}
+							 }
+						 }
+					 }
+				 }
+				\item{Model `gompertzsurv'.}{Number of hyperparmeters are 1.
+					 \describe{
+						\item{Hyperparameter `theta'}{
+							 \describe{
+							\item{hyperid = }{`106101'}
+							\item{name = }{`shape'}
+							\item{short.name = }{`alpha'}
+							\item{initial = }{`-20'}
+							\item{fixed = }{`FALSE'}
+							\item{prior = }{`normal'}
+							\item{param = }{`-20 0.01'}
+							\item{to.theta = }{`\code{function(x, sc = 0.1) log(x) / sc}'}
+							\item{from.theta = }{`\code{function(x, sc = 0.1) exp(sc * x)}'}
+							}
+						}
+					 }
+					 \describe{
+						\item{Properties:}{
+							\describe{
+								\item{doc = }{`gompertz distribution'}
+								\item{status = }{`experimental'}
+								\item{survival = }{`TRUE'}
+								\item{discrete = }{`FALSE'}
+								\item{link = }{`default log neglog'}
+								\item{pdf = }{`gompertz'}
 							 }
 						 }
 					 }

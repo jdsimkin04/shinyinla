@@ -4,6 +4,186 @@
 \title{R-INLA News}
 \encoding{UTF-8}
 
+\section{CHANGES IN VERSION 21.06.11}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item Added support for Mac M1 (native build with R-4.1)
+      \item New \code{twostage} options (highly experimental)
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Massive code overhaul
+      \item Various minor fixes
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.05.02}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Some minor bug-fixes and code improvements
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.04.22}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item Mac only: Added optional path to \code{vecLib}
+      BLAS and LAPACK libraries.
+      \item Adding argument \code{.special} to \code{inla.surv}-object.
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Some code improvement 
+    }
+  }
+}
+
+
+\section{CHANGES IN VERSION 21.04.16}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item Mac only: Link with \code{vecLib} BLAS and LAPACK libraries
+            by default. Turn off with \code{inla.setOption(vecLib=FALSE)}.
+      \item Adding an experimental improvement
+            for \code{strategy=simplified.laplace} (not enabled by default)
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Some code improvement 
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.31}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item General code improvement 
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.27}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item New family \code{stochvolsn}
+      \item New family \code{cenpoisson2}
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Improve robustness for survival models
+      \item General code improvement
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.21}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item Changes in \code{inla.jp}; see help-page for details.
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.20}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item New family \code{gompertz}
+      \item \code{inla.binary.install()} now do md5-checksum check
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Code optimization for \code{barrier} models
+    }
+  }
+}
+
+
+\section{CHANGES IN VERSION 21.03.17}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Internal code changes for \code{family=tweedie}
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.16}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item \code{inla.binary.install()} can now also run
+            non-interactive
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Internal code changes
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.14}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Internal code changes
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.13}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Fixed some missprints in doc
+      \item Trying to get vigettes to work again
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.03.08}{
+  \subsection{NEW EXPERIMENTAL FEATURES}{
+    \itemize{
+      \item Added family \code{logperiodogram} back in
+      \item Added new family \code{agaussian}
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Improved initial values for \code{x} 
+      \item Improved computations for saturated likelihood
+      \item Various minor code cleanup
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.02.23}{
+  \subsection{NEW FEATURES}{
+    \itemize{
+      \item Default \code{strategy} is now \code{simplified.laplace}
+      for smaller models (< 5000 nodes) and \code{adaptive} for larger ones
+    }
+  }
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Minor bug-fixes
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.01.26}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Improve parallel rerodering for PARDISO
+      \item Improve \code{coxph} for large data
+      \item Improve internal CPU-timing output
+    }
+  }
+}
+
 \section{CHANGES IN VERSION xx.xx.xx}{
   \subsection{USER-VISIBLE CHANGES}{
     \itemize{
@@ -23,6 +203,14 @@
   \subsection{BUG FIXES}{
     \itemize{
       \item 
+    }
+  }
+}
+
+\section{CHANGES IN VERSION 21.01.18}{
+  \subsection{BUG FIXES}{
+    \itemize{
+      \item Use METIS5 with PARDISO
     }
   }
 }

@@ -12,11 +12,11 @@
 \description{Control variables in \code{control.inla} for use in \code{inla}}
 \usage{
 inla.set.control.inla.default(...)
-control.inla(adapt.hessian.max.trials, adapt.hessian.mode, adapt.hessian.scale, adaptive.max, adjust.weights, b.strategy, cmin, constr.marginal.diagonal, control.correct, cpo.diff, cutoff, diagonal, diff.logdens, dz, fast, force.diagonal, global.node.degree, global.node.factor, h, huge, int.design, int.strategy, interpolator, lincomb.derived.correlation.matrix, lincomb.derived.only, linear.correction, mode.known, npoints, num.gradient, num.hessian, numint.abserr, numint.maxfeval, numint.relerr, optimise.strategy, optimiser, print.joint.hyper, reordering, restart, skip.configurations, stencil, step.factor, step.len, strategy, stupid.search, stupid.search.factor, stupid.search.max.iter, tolerance, tolerance.f, tolerance.g, tolerance.step, tolerance.x, use.directions, verbose)
+control.inla(adapt.hessian.max.trials, adapt.hessian.mode, adapt.hessian.scale, adaptive.max, adjust.weights, b.strategy, cmin, constr.marginal.diagonal, cpo.diff, cutoff, diagonal, diff.logdens, dz, fast, force.diagonal, global.node.degree, global.node.factor, h, huge, improved.simplified.laplace, int.design, int.strategy, interpolator, lincomb.derived.correlation.matrix, lincomb.derived.only, linear.correction, mode.known, npoints, num.gradient, num.hessian, numint.abserr, numint.maxfeval, numint.relerr, optimise.strategy, optimiser, print.joint.hyper, reordering, restart, skip.configurations, stencil, step.factor, step.len, strategy, stupid.search, stupid.search.factor, stupid.search.max.iter, tolerance, tolerance.f, tolerance.g, tolerance.step, tolerance.x, use.directions, verbose)
 }
 \arguments{
 \item{...}{Possible arguments}
-\item{strategy}{   Character The strategy to use for the approximations; one of 'gaussian', 'simplified.laplace' (default), 'laplace' or 'adaptive'}
+\item{strategy}{   Character The strategy to use for the approximations; one of 'auto' (default), 'gaussian', 'simplified.laplace', 'laplace' or 'adaptive'}
 \item{int.strategy}{   Character The integration strategy to use; one of 'auto' (default), 'ccd', 'grid', 'eb' (empirical bayes), 'user' or 'user.std'}
 \item{int.design}{   Matrix Matrix of user-defined integration points and weights. Each row consists theta values and the integration weight. (EXPERIMENTAL!)}
 \item{interpolator}{   Character The interpolator used to compute the marginals for the hyperparameters. One of 'auto', 'nearest', 'quadratic', 'weighted.distance', 'ccd', 'ccdintegrate', 'gridsum', 'gaussian'. Default is 'auto'.}
@@ -64,12 +64,12 @@ control.inla(adapt.hessian.max.trials, adapt.hessian.mode, adapt.hessian.scale, 
 \item{stupid.search.max.iter}{   Numerical Maximum number of iterations allowed for the stupid-search-algorithm. (default 1000)}
 \item{stupid.search.factor}{   Numerical Factor (>=1) to increase the step-length with after each new interation. (default 1.05)}
 \item{control.vb}{   List of arguments for various VB corrections. \code{enable} Logical Use this feature? \code{strategy} Charactor What to correct, one of "mean", "more.to.come.later...". \code{verbose} Logical Be verbose or not. \code{refinement} Integer Number of extra refinement iterations. \code{max.correct} Numerical Bound the allowed correction (\code{strategy="mean"}: \code{|diff.mean/stdev| < max.correct}). \code{hyperpar.correct} Logical Correct the marginal posterior for the hyperparameters?}
-\item{control.correct}{   List of control arguments for correction for the Laplace approximation: \code{enable} Logical Use this feature? \code{factor} Numerical Factor used in adjusting the correction factor (default=10) if \code{correct=TRUE}. \code{strategy} Character The strategy used to compute the correction; one of 'simplified.laplace' (default) or 'laplace'. \code{verbose} Logical Be verbose when computing the correction? (default \code{FALSE})}
 \item{num.gradient}{   Character Set the numerical scheme to compute the gradient, one of \code{"forward"} or \code{"central"} (default).}
 \item{num.hessian}{   Character Set the numerical scheme to compute the Hessian, one of \code{"forward"} or \code{"central"} (default).}
 \item{optimise.strategy}{   Character THIS OPTION IS EXPERIMENTAL. Chose the optimiser strategy, one of \code{"plain"} or \code{"smart"} (default)}
 \item{use.directions}{   THIS OPTION IS EXPERIMENTAL. Unless \code{FALSE} or \code{NULL}, use directions for computing gradient and Hessian, initialised with \code{use.directions} if a matrix.}
 \item{constr.marginal.diagonal}{   Add stability to \code{AQ^-1A^T} by adding a small diagonal term. (default \code{epsilon^0.5})}
+\item{improved.simplified.laplace}{   If \code{TRUE} use an experimental improved variant, otherwise, use the standard one.}
 }
 \value{
   

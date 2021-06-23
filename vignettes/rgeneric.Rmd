@@ -18,6 +18,7 @@ inla.setOption(smtp="taucs")
 library(knitr)
 library(rmarkdown)
 knitr::opts_chunk$set(echo=TRUE, cache=FALSE, message=FALSE, warning=FALSE)
+knitr::opts_chunk$set(fig.path="figures/rgeneric/")
 ```
 
 # Introduction
