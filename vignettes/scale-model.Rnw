@@ -1,11 +1,12 @@
 \documentclass[authoryear]{article}
-%%\usepackage{graphics}
+\usepackage{graphics}
+% or use the graphicx package for more complicated commands
+\usepackage{graphicx}
 \usepackage{pgf}
 \usepackage{epsfig}
 \usepackage{amssymb}
 \usepackage{amsmath,latexsym}
 \usepackage{array}
-\usepackage{hyperref}
 \usepackage[round]{natbib}
    
 \usepackage{setspace} 
@@ -80,8 +81,6 @@ library(INLA)
 set.seed(123)
 inla.setOption(num.threads="1:1")
 inla.setOption(smtp="taucs")
-opts_chunk$set(message=FALSE, warning=FALSE, tidy=FALSE,
-               fig.path='figures/scale-model/')
 @
 
 \section{Introduction}

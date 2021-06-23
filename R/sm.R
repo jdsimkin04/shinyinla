@@ -187,7 +187,7 @@ inla.sm.read <- function(filename = "SparseMatrix.dat") {
         x = xx,
         dims = nn[1:2],
         index1 = FALSE,
-        repr = "T"
+        giveCsparse = FALSE
     ))
     return(M)
 }

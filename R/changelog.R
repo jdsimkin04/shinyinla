@@ -16,6 +16,6 @@
 ## !\seealso{\code{\link{inla}}}
 
 `inla.changelog` <- function() {
-    browseURL("https://github.com/hrue/r-inla/commits/devel")
+    browseURL("https://bitbucket.org/hrue/r-inla/commits/all")
     return(invisible())
 }

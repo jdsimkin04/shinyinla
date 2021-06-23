@@ -18,7 +18,7 @@
         stop("This should not happen.")
     }
 
-    if (inla.os("linux") || inla.os("mac") || inla.os("mac.arm64")) {
+    if (inla.os("linux") || inla.os("mac")) {
         s <- system(paste(
             shQuote(inla.call.no.remote()), "-s -m finn",
             "-r", reordering, "-z", seed, finn.file

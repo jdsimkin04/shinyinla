@@ -41,7 +41,7 @@
                     for (i in idx) {
                         pdf <- m[[sec]][[i]]$pdf
                         if (!is.null(pdf) && !is.na(pdf)) {
-                            filename <- paste("documentation/", sections[[sec]], "/", pdf, ".pdf", sep = "")
+                            filename <- paste("doc/", sections[[sec]], "/", pdf, ".pdf", sep = "")
                             filename.full <- system.file(filename, package = "INLA")
                             if (verbose) {
                                 cat("\n")
@@ -52,7 +52,7 @@
                             }
                             if (file.exists(filename.full)) {
                                 RShowDoc(
-                                    paste("documentation/", sections[[sec]], "/", pdf, sep = ""),
+                                    paste(sections[[sec]], "/", pdf, sep = ""),
                                     "pdf", "INLA"
                                 )
                             }

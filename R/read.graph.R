@@ -425,7 +425,7 @@
         ## a neigbour-graph from spdep with class="nb".
         ## this can replace spdep::nb2INLA.
         ## call spdep::nb2listw and use spdep coercion.
-        inla.require("spdep", stop.on.error = TRUE)
+        inla.require("spdep")
         Q <- spdep::nb2listw(graph, style = "B", zero.policy = TRUE)
         Q <- inla.as.sparse(as(Q, "symmetricMatrix"))
         return(inla.matrix2graph.internal(Q, size.only = size.only))
@@ -498,12 +498,9 @@
     ## we evaluate them here,  as they are set in '...'
     inla.eval.dots(...)
 
-    if (!inla.require("Rgraphviz")) {
-        stop("Package 'Rgraphiviz' is required but not installed. Please install from 'https://www.bioconductor.org'.")
-    }
-    if (!inla.require("graph")) {
-        stop("Package 'graph' is required but not installed. Please install from 'https://www.bioconductor.org'.")
-    }
+    ## I add here some tools to view and summarize a such graphs...
+    inla.require("Rgraphviz") || stop("Need library 'Rgraphviz' from Bioconductor: see https://www.bioconductor.org")
+    inla.require("graph") || stop("Need library 'graph' from Bioconductor: see https://www.bioconductor.org")
 
     filter <- match.arg(filter, filter.args)
     if (is.null(attrs)) {
@@ -514,7 +511,7 @@
     } else {
         node.names <- as.character(1:x$n)
     }
-    g <- graph::graphNEL(nodes = node.names, edgemode = "undirected")
+    g <- new("graphNEL", nodes = node.names, edgemode = "undirected")
     for (i in 1L:x$n) {
         if (x$nnbs[i] > 0L) {
             j <- x$nbs[[i]]

@@ -46,10 +46,10 @@
 ## !    keep = inla.getOption("keep"),
 ## !    working.directory = inla.getOption("working.directory"),
 ## !    silent = inla.getOption("silent"),
-## !    twostage = NULL, 
 ## !    debug = inla.getOption("debug"),
 ## !    .parent.frame = parent.frame()
 ## !    )
+## !
 ## ! }
 ## ! \arguments{
 ## ! \item{formula}{ A \code{inla} formula like \code{y
@@ -214,10 +214,6 @@
 ## ! \code{inla}-program would be ``silent''. If equal to
 ## ! 2L, then supress also error messages from the
 ## ! \code{inla}-program.}
-
-## ! \item{twostage}{Do inference using the new twostage-approach (if \code{TRUE}) or
-## !                 the classical approach (if \code{FALSE}).
-## !                 If \cite{NULL}, this will be decided internally. Default \code{NULL}.}
 
 ## ! \item{debug}{ If \code{TRUE}, then enable some debug
 ## ! output.  }
@@ -417,7 +413,6 @@
                    keep = inla.getOption("keep"),
                    working.directory = inla.getOption("working.directory"),
                    silent = inla.getOption("silent"),
-                   twostage = NULL, 
                    debug = inla.getOption("debug"),
                    .parent.frame = parent.frame()) {
 
@@ -607,7 +602,6 @@
             keep = keep,
             working.directory = working.directory,
             silent = silent,
-            twostage = twostage, 
             debug = debug
         )
 
@@ -634,8 +628,6 @@
         nc <- NULL ## not in use
         if (inherits(y...orig, "inla.surv")) {
             class(y...orig) <- NULL
-            ## this one is not passed along
-            y...orig$.special <- NULL
             ny <- max(sapply(y...orig, length))
         } else if (inherits(y...orig, "inla.mdata")) {
             class(y...orig) <- NULL
@@ -881,6 +873,8 @@
     ## because we have 'control' within a 'control', we have to process them spesifically
     cont.inla$control.vb <- cont.inla.def$control.vb
     cont.inla$control.vb[names(control.inla$control.vb)] <- control.inla$control.vb
+    cont.inla$control.correct <- cont.inla.def$control.correct
+    cont.inla$control.correct[names(control.inla$control.correct)] <- control.inla$control.correct
 
     ## control predictor section
     cont.predictor <- inla.set.control.predictor.default()
@@ -1090,7 +1084,6 @@
     mf$control.compute <- NULL
     mf$control.predictor <- NULL
     mf$silent <- NULL
-    mf$twostage <- NULL
     mf$control.hazard <- NULL
     mf$control.family <- NULL
     mf$control.update <- NULL
@@ -2055,17 +2048,9 @@
     ## create mode section
     cont.mode <- inla.set.control.mode.default()
     cont.mode[names(control.mode)] <- control.mode
-    if (!is.null(cont.mode$result)) {
-        ## Reduce the size of 'result' stored in 'r$.args'. If this is stored directly it
-        ## can/will require lots of storage. We do this by creating a stripped object with only
-        ## what is needed and pass that one along, with the expected class.
-        cont.mode$result <- list(mode = list(x = cont.mode$result$mode$x,
-                                             theta = cont.mode$result$mode$theta))
-        class(cont.mode$result) <- "inla" ## in case there are checks on
-    }
     inla.mode.section(file = file.ini, cont.mode, data.dir)
 
-    ## create expert section. the 'preopt' option is processed here and not in the expert.section
+    ## create expert section
     cont.expert <- inla.set.control.expert.default()
     cont.expert[names(control.expert)] <- control.expert
     inla.expert.section(file = file.ini, cont.expert, data.dir = data.dir)
@@ -2099,7 +2084,7 @@
         arg.nt <- paste0(" -t", num.threads, " -B", blas.num.threads, " ")
 
         ## due to the weird behaviour,  we will do the verbose-mode differently now
-        if (inla.os("linux") || inla.os("mac") || inla.os("mac.arm64")) {
+        if (inla.os("linux") || inla.os("mac")) {
             arg.v <- inla.ifelse(verbose, "-v", "-v")
         } else {
             arg.v <- inla.ifelse(verbose, "-v", "-v")
@@ -2115,22 +2100,8 @@
         arg.b <- ""
     }
 
-    if ((inla.os("mac") || inla.os("mac.arm64")) && inla.getOption("vecLib") && !inla.getOption("mkl")) {
-        arg.vecLib <- "-L"
-    } else {
-        arg.vecLib <- ""
-    }
-
-    if (is.null(twostage)) {
-        ## chose the default action here
-        arg.P <- ""
-    } else {
-        ## user-defined action
-        arg.P <- if (twostage) "-P" else ""
-    }
-
     ## collect all. we might add '-p' later if inla.call="submit"
-    all.args <- paste(arg.arg, arg.b, arg.s, arg.v, arg.nt, arg.vecLib, arg.P, sep = " ")
+    all.args <- paste(arg.arg, arg.b, arg.s, arg.v, arg.nt, sep = " ")
 
     ## define some environment variables for remote computing
     vars <- list(
@@ -2141,8 +2112,7 @@
             R.Version()$major, ".",
             strsplit(R.Version()$minor, "[.]")[[1]][1]
         ),
-        INLA_RHOME = Sys.getenv("R_HOME"),
-        INLA_VECLIB_PATH = inla.getOption("vecLibPath")
+        INLA_RHOME = Sys.getenv("R_HOME")
     )
     do.call("Sys.setenv", vars)
     inla.set.sparselib.env(inla.dir, blas.num.threads = blas.num.threads)
@@ -2201,7 +2171,7 @@
                 results.dir = results.dir,
                 inla.call.args = all.args
             )
-        } else if (inla.os("linux") || inla.os("mac") || inla.os("mac.arm64")) {
+        } else if (inla.os("linux") || inla.os("mac")) {
             if (verbose) {
                 echoc <- system(paste(shQuote(inla.call), all.args, shQuote(file.ini)))
             } else {
