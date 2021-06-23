@@ -120,10 +120,10 @@
     mkl <- if (mkl) "mkl." else ""
 
     if (inla.os("mac")) {
-        if (nchar(mkl) > 0L && !lic) {
-            mkl <- ""
-        }
+        if (nchar(mkl) > 0L && !lic) mkl <- ""
         fnm <- system.file(paste("bin/mac/", inla.os.32or64bit(), "bit/inla.", mkl, "run", sep = ""), package = "INLA")
+    } else if (inla.os("mac.arm64")) {
+        fnm <- system.file("bin/mac.arm64/inla.run", package = "INLA")
     } else if (inla.os("linux")) {
         fnm <- system.file(paste("bin/linux/", inla.os.32or64bit(), "bit/inla.", mkl, "run", sep = ""), package = "INLA")
     } else if (inla.os("windows")) {
@@ -151,7 +151,10 @@
 
 `inla.fmesher.call.builtin` <- function() {
     if (inla.os("mac")) {
-        fnm <- system.file(paste("bin/mac/", inla.os.32or64bit(), "bit/fmesher.run", sep = ""), package = "INLA")
+        fnm <- system.file(paste("bin/mac/", inla.os.32or64bit(), "bit/fmesher.run", sep = ""),
+                           package = "INLA")
+    } else if (inla.os("mac.arm64")) {
+        fnm <- system.file("bin/mac.arm64/fmesher.run", package = "INLA")
     } else if (inla.os("linux")) {
         fnm <- system.file(paste("bin/linux/", inla.os.32or64bit(), "bit/fmesher.run", sep = ""), package = "INLA")
     } else if (inla.os("windows")) {
@@ -189,9 +192,12 @@
 
     inla.only.for.developers(msg = "inla.my.update", strict = TRUE)
 
+    a <- inla.models()
+    rm(a)
+        
     if (Sys.getenv("USER") %in% "hrue") {
         dir.default <- "~/p/inla/r-inla/rinla/R"
-        bin.default <- "~/p/inla/work/local/bin"
+        bin.default <- "~/bin"
     } else if (Sys.getenv("USER") %in% "rueh") {
         dir.default <- "~/build64/r-inla/rinla/R"
         bin.default <- "~/build64/local/bin"
@@ -288,9 +294,10 @@
     }
 
     ## hash the models again
-    assign("inla.version", "(Undefined)", envir = inla.get.inlaEnv())
-    assign("inla.models", NULL, envir = inla.get.inlaEnv())
+    rm("inla.models", envir = inla.get.inlaEnv())
+    rm("rinla.version", envir = inla.get.inlaEnv())
     cat("Reset stored 'inla.models()' in .inlaEnv\n")
+    m <- inla.models()
 
     return(invisible())
 }
@@ -807,24 +814,14 @@
     return(factor.matrix)
 }
 
-`inla.is.installed` <- function(pkg) {
-    ## return TRUE if PKG is installed and FALSE if not
-    return(is.element(pkg, installed.packages()[, 1L]))
-}
-
-`inla.require` <- function(pkg, ...) {
+`inla.require` <- function(pkg, stop.on.error = FALSE, quietly = TRUE, ...) {
     ## follow the `new' standard...
-    return(requireNamespace(pkg, quietly = TRUE, ...))
-}
-
-`inla.require.old` <- function(pkg) {
-    ## load PKG if it exists, but be silent. return status
-    w <- getOption("warn")
-    options(warn = -1L)
-    value <- (inla.is.installed(pkg) && require(pkg, quietly = TRUE, character.only = TRUE))
-    options(warn = w)
-
-    return(value)
+    ret <- requireNamespace(pkg, quietly = quietly, ...)
+    if (!ret && stop.on.error) {
+        stop(paste0("Package '", pkg, "' is required to proceed, but is not installed. Please install."))
+    } else {
+        return (ret)
+    }
 }
 
 `inla.inlaprogram.has.crashed` <- function() {
@@ -1002,7 +999,7 @@
     }
 }
 
-`inla.cmpfun` <- function(fun, options = list(optimize = 3L)) {
+`inla.cmpfun` <- function(fun, options = list(optimize = 3L, suppressUndefined = TRUE)) {
     if (inla.require("compiler")) {
         return(compiler::cmpfun(fun, options = options))
     } else {
@@ -1053,7 +1050,7 @@
 
 `inla.runjags2dataframe` <- function(runjags.object) {
     ## convert from runjags-output to a data.frame
-    stopifnot(inla.require("runjags"))
+    inla.require("runjags", stop.on.error = TRUE)
     return(as.data.frame(runjags::combine.mcmc(runjags.object, collapse.chains = TRUE)))
 }
 

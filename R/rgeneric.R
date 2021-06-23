@@ -117,7 +117,7 @@
                     2L:n
                 )
                 x <- 1 ## meaning that all are 1
-                G <- sparseMatrix(i = i, j = j, x = x, giveCsparse = FALSE)
+                G <- sparseMatrix(i = i, j = j, x = x, repr = "T")
             }
         }
         return(G)
@@ -151,7 +151,7 @@
                     ## off-diagonal
                     rep(-param$rho, n - 1L)
                 )
-            Q <- sparseMatrix(i = i, j = j, x = x, giveCsparse = FALSE)
+            Q <- sparseMatrix(i = i, j = j, x = x, repr = "T")
         }
         return(Q)
     }
@@ -229,7 +229,7 @@
             ## off-diagonal
             2L:n
         )
-        G <- inla.as.sparse(sparseMatrix(i = i, j = j, x = 1, giveCsparse = FALSE))
+        G <- inla.as.sparse(sparseMatrix(i = i, j = j, x = 1, repr = "T"))
         return(G)
     }
 
@@ -358,16 +358,13 @@
             n = dim(model(cmd = "graph", theta = NULL))[1],
             rgeneric = list(
                 definition = if (!compile) {
-                    model
-                } else {
-                    inla.require("compiler")
-                    compiler::cmpfun(model,
-                        options = list(
-                            optimize = 3L,
-                            suppressUndefined = TRUE
-                        )
-                    )
-                },
+                                 model
+                             } else {
+                                 inla.require("compiler", stop.on.error = TRUE)
+                                 compiler::cmpfun(model,
+                                                  options = list(optimize = 3L,
+                                                                 suppressUndefined = TRUE))
+                             },
                 debug = debug,
                 optimize = optimize
             )
@@ -535,7 +532,7 @@
             x = c(Q@x[idx.eq], Q@x[idx.gt], Q@x[idx.gt]),
             index1 = FALSE,
             dims = c(n, n),
-            giveCsparse = FALSE
+            repr = "T"
         )
         Q <- inla.as.sparse(Q)
         return(Q)

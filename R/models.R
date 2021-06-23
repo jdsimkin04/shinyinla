@@ -5036,13 +5036,13 @@
                     hyper = list(
                         theta1 = list(
                             hyperid = 49031,
-                            name = "skew",
+                            name = "skewness",
                             short.name = "skew",
                             initial = 0.00123456789,
                             fixed = FALSE,
                             prior = "pc.sn",
                             param = 10,
-                            ## This value defined by LINK_SN_SKEWMAX in inla.h
+                            ## This value defined by GMRFLib_SN_SKEWMAX
                             to.theta = function(x, skew.max = 0.988) log((1 + x / skew.max) / (1 - x / skew.max)),
                             from.theta = function(x, skew.max = 0.988) skew.max * (2 * exp(x) / (1 + exp(x)) - 1)
                         ),
@@ -5235,14 +5235,15 @@
         predictor =
             list(
                 predictor = list(
-                    doc = "(not used)",
+                    doc = "(do not use)",
                     hyper = list(
                         theta = list(
                             hyperid = 53001,
                             name = "log precision",
                             short.name = "prec",
-                            initial = 12,
-                            fixed = TRUE,
+                            initial = log(1/0.001^2),
+                            ## do not change
+                            fixed = TRUE, 
                             prior = "loggamma",
                             param = c(1, 0.00001),
                             to.theta = function(x) log(x),
@@ -5335,25 +5336,25 @@
                     pdf = "poisson"
                 ),
 
-                ### contpoisson = list(
-                ### doc = "The Cont Poisson likelihood",
-                ### hyper = list(
-                ### ),
-                ### survival = FALSE,
-                ### discrete = TRUE,
-                ### link = c("default", "log"),
-                ### pdf = "contpoisson"
-                ### ),
-                ###
-                ### qcontpoisson = list(
-                ### doc = "The quantile Cont Poisson likelihood",
-                ### hyper = list(
-                ### ),
-                ### survival = FALSE,
-                ### discrete = TRUE,
-                ### link = c("default", "log"),
-                ### pdf = "qcontpoisson"
-                ### ),
+                ## contpoisson = list(
+                ## doc = "The Cont Poisson likelihood",
+                ## hyper = list(
+                ## ),
+                ## survival = FALSE,
+                ## discrete = TRUE,
+                ## link = c("default", "log"),
+                ## pdf = "contpoisson"
+                ## ),
+                ##
+                ## qcontpoisson = list(
+                ## doc = "The quantile Cont Poisson likelihood",
+                ## hyper = list(
+                ## ),
+                ## survival = FALSE,
+                ## discrete = TRUE,
+                ## link = c("default", "log"),
+                ## pdf = "qcontpoisson"
+                ## ),
 
                 cenpoisson = list(
                     doc = "Then censored Poisson likelihood",
@@ -5361,8 +5362,17 @@
                     survival = FALSE,
                     discrete = TRUE,
                     link = c("default", "log", "logoffset", "test1", "special1", "special2"),
-                    status = "experimental",
                     pdf = "cenpoisson"
+                ),
+
+                cenpoisson2 = list(
+                    doc = "Then censored Poisson likelihood (version 2)",
+                    hyper = list(),
+                    survival = FALSE,
+                    discrete = TRUE,
+                    link = c("default", "log", "logoffset", "test1", "special1", "special2"),
+                    status = "experimental",
+                    pdf = "cenpoisson2"
                 ),
 
                 gpoisson = list(
@@ -6014,6 +6024,28 @@
                     pdf = "gaussian"
                 ),
 
+                agaussian = list(
+                    doc = "The aggregated Gaussian likelihoood",
+                    hyper = list(
+                        theta = list(
+                            hyperid = 66001,
+                            name = "log precision",
+                            short.name = "prec",
+                            initial = 4,
+                            fixed = FALSE,
+                            prior = "loggamma",
+                            param = c(1, 0.00005),
+                            to.theta = function(x) log(x),
+                            from.theta = function(x) exp(x)
+                        )
+                    ),
+                    status = "experimental", 
+                    survival = FALSE,
+                    discrete = FALSE,
+                    link = c("default", "identity", "logit", "loga", "cauchit", "log", "logoffset"),
+                    pdf = "agaussian"
+                ),
+
                 circularnormal = list(
                     doc = "The circular Gaussian likelihoood",
                     hyper = list(
@@ -6183,13 +6215,13 @@
                         ),
                         theta2 = list(
                             hyperid = 74002,
-                            name = "logit skewness",
-                            short.name = "skewness",
+                            name = "logit skew",
+                            short.name = "skew",
                             initial = 0.00123456789,
                             fixed = FALSE,
                             prior = "pc.sn",
                             param = 10,
-                            ## This value defined by LINK_SN_SKEWMAX in inla.h
+                            ## This value defined by GMRFLib_SN_SKEWMAX
                             to.theta = function(x, skew.max = 0.988) log((1 + x / skew.max) / (1 - x / skew.max)),
                             from.theta = function(x, skew.max = 0.988) skew.max * (2 * exp(x) / (1 + exp(x)) - 1)
                         )
@@ -6312,7 +6344,7 @@
                             hyperid = 79001,
                             name = "log alpha",
                             short.name = "alpha",
-                            initial = 0.1,
+                            initial = -2,
                             fixed = FALSE,
                             prior = "pc.alphaw",
                             param = c(5),
@@ -6338,7 +6370,7 @@
                             hyperid = 79101,
                             name = "log alpha",
                             short.name = "alpha",
-                            initial = 0.1,
+                            initial = -2,
                             fixed = FALSE,
                             prior = "pc.alphaw",
                             param = c(5),
@@ -6451,6 +6483,40 @@
                     discrete = FALSE,
                     link = c("default", "log"),
                     pdf = "stochvolgaussian"
+                ),
+
+                stochvolsn = list(
+                    doc = "The SkewNormal stochvol likelihood",
+                    hyper = list(
+                        theta1 = list(
+                            hyperid = 82101,
+                            name = "logit skew",
+                            short.name = "skew",
+                            initial = 0.00123456789,
+                            fixed = FALSE,
+                            prior = "pc.sn",
+                            param = 10,
+                            ## This value defined by GMRFLib_SN_SKEWMAX
+                            to.theta = function(x, skew.max = 0.988) log((1 + x / skew.max) / (1 - x / skew.max)),
+                            from.theta = function(x, skew.max = 0.988) skew.max * (2 * exp(x) / (1 + exp(x)) - 1)
+                        ), 
+                        theta2 = list(
+                            hyperid = 82102,
+                            name = "log precision",
+                            short.name = "prec",
+                            initial = 500, ## yes, this is correct
+                            fixed = TRUE, ## yes, this is correct
+                            prior = "loggamma",
+                            param = c(1, 0.005),
+                            to.theta = function(x) log(x),
+                            from.theta = function(x) exp(x)
+                        )
+                    ),
+                    status = "experimental", 
+                    survival = FALSE,
+                    discrete = FALSE,
+                    link = c("default", "log"),
+                    pdf = "stochvolsn"
                 ),
 
                 stochvolt = list(
@@ -7877,7 +7943,57 @@
                     discrete = FALSE,
                     link = c("default", "log"),
                     pdf = "fmri"
-                )
+                ),
+
+                gompertz = list(
+                    doc = "gompertz distribution",
+                    hyper = list(
+                        theta = list(
+                            hyperid = 105101,
+                            name = "shape",
+                            short.name = "alpha",
+                            initial = -20,
+                            fixed = FALSE,
+                            prior = "normal",
+                            param = c(-20, 0.01),
+                            ## the 'sc' constant is defined in inla.h, and must be the same.
+                            ## I know, this is hard-coded for the moment. Should be a generic
+                            ## way of doing this...
+                            to.theta = function(x, sc = 0.1) log(x) / sc,
+                            from.theta = function(x, sc = 0.1) exp(sc * x)
+                        )
+                    ),
+                    status = "experimental", 
+                    survival = FALSE,
+                    discrete = FALSE,
+                    link = c("default", "log", "neglog"),
+                    pdf = "gompertz"
+                ), 
+
+                gompertzsurv = list(
+                    doc = "gompertz distribution",
+                    hyper = list(
+                        theta = list(
+                            hyperid = 106101,
+                            name = "shape",
+                            short.name = "alpha",
+                            initial = -20,
+                            fixed = FALSE,
+                            prior = "normal",
+                            param = c(-20, 0.01),
+                            ## the 'sc' constant is defined in inla.h, and must be the same.
+                            ## I know, this is hard-coded for the moment. Should be a generic
+                            ## way of doing this...
+                            to.theta = function(x, sc = 0.1) log(x) / sc,
+                            from.theta = function(x, sc = 0.1) exp(sc * x)
+                        )
+                    ),
+                    status = "experimental", 
+                    survival = TRUE,
+                    discrete = FALSE,
+                    link = c("default", "log", "neglog"),
+                    pdf = "gompertz"
+                ) 
             )
     )
 }
@@ -8171,6 +8287,7 @@
     envir <- inla.get.inlaEnv()
 
     if (exists("inla.models", envir = envir) &&
+        !is.null(get("inla.models", envir = envir)) && 
         exists("rinla.version", envir = envir) &&
         get("rinla.version", envir = envir) == inla.version("version")) {
         return(get("inla.models", envir = envir))
