@@ -89,12 +89,10 @@
         return(colSums(t(ev$vectors[, jj]) * y))
     }
     if (missingArg(ev.t)) {
-        R.t <- crossprod(diff(
+        ev.t <- eigen(as.matrix(crossprod(diff(
             Diagonal(m),
-            lag = 1, differences = 1))
-        R.t <- inla.scale.model(R.t, 
-				constr=list(A=matrix(1, 1, m), e=0))
-	ev.t <- eigen(as.matrix(R.t))
+            lag = 1, differences = 1
+        ))))
     } else {
         m <- length(ev.t$values)
     }

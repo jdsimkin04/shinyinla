@@ -90,7 +90,7 @@
 `inla.pardiso.check` <- function() {
     t.dir <- inla.tempdir()
     inla.set.sparselib.env(inla.dir = t.dir)
-    if (inla.os("linux") || inla.os("mac") || inla.os("mac.arm64")) {
+    if (inla.os("linux") || inla.os("mac")) {
         ret <- system(paste(shQuote(inla.call.no.remote()), "-m pardiso"), intern = TRUE)
     } else if (inla.os("windows")) {
         ret <- system(paste(shQuote(inla.call.no.remote()), "-m pardiso"), intern = TRUE)

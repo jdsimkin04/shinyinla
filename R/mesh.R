@@ -279,7 +279,7 @@ lines.inla.mesh.segment <- function(x, loc = NULL, col = NULL,
     }
     color <- col
     if (rgl) {
-        inla.require("rgl", stop.on.error = TRUE)
+        stopifnot(inla.require("rgl"))
         if (!add) {
             dev <- rgl::open3d()
             rgl::view3d(0, 0, fov = 0)
@@ -443,7 +443,7 @@ plot.inla.trimesh <- function(x, S, color = NULL, color.axis = NULL,
                               draw.vertices = TRUE, draw.edges = TRUE,
                               edge.color = rgb(0.3, 0.3, 0.3), ...) {
     TV <- x
-    inla.require("rgl", stop.on.error = TRUE)
+    stopifnot(inla.require("rgl"))
 
     ## Make indices 1 based.  Deprecated and is deactivated.
     if (min(TV) == 0) {
@@ -569,7 +569,7 @@ plot.inla.mesh <- function(x,
     mesh <- x
 
     if (rgl) {
-        inla.require("rgl", stop.on.error = TRUE)
+        stopifnot(inla.require("rgl"))
         if (!add) {
             dev <- rgl::open3d()
             rgl::view3d(0, 0, fov = 0)
@@ -4537,7 +4537,7 @@ inla.nonconvex.hull <- function(points, convex = -0.15, concave = convex, resolu
         )
     xy <- as.matrix(expand.grid(ax[[1]], ax[[2]]))
 
-    inla.require("splancs", stop.on.error = TRUE)
+    stopifnot(inla.require("splancs"))
     z <- (matrix(
         splancs::nndistF(points, xy),
         resolution[1], resolution[2]
@@ -4636,7 +4636,7 @@ inla.nonconvex.hull.basic <- function(points, convex = -0.15, resolution = 40, e
     xy <- as.matrix(expand.grid(ax[[1]], ax[[2]]))
     tr <- diag(c(1 / ex[1], 1 / ex[2]))
 
-    inla.require("splancs", stop.on.error = TRUE)
+    stopifnot(inla.require("splancs"))
     z <- (matrix(
         splancs::nndistF(points %*% tr, xy %*% tr),
         resolution[1], resolution[2]

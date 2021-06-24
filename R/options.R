@@ -37,10 +37,6 @@
 ## !
 ## !     mkl: Use binaries buildt with Intel MKL?  (If possible)
 ## !
-## !     vecLib: This option applies to Mac only. If TRUE and mkl=FALSE, link with vecLib BLAS and LAPACK libs (if available)
-## !
-## !     vecLibPath: This option applies to Mac only. Path to vecLib-libraries. If empty, use default.
-## !
 ## !     pardiso.license: The full path to the PARDISO license file
 ## !
 ## !     keep: Keep temporary files?
@@ -102,8 +98,6 @@
             blas.num.threads = 0L,
             smtp = "default",
             mkl = if (inla.os("linux") || inla.os("mac")) TRUE else FALSE,
-            vecLib = FALSE, 
-            vecLibPath = "", 
             pardiso.license = NULL,
             keep = FALSE,
             working.directory = NULL,
@@ -133,8 +127,6 @@
                                  "blas.num.threads",
                                  "smtp",
                                  "mkl",
-                                 "vecLib",
-                                 "vecLibPath",
                                  "pardiso.license",
                                  "keep",
                                  "working.directory",
@@ -225,8 +217,6 @@
                                           "blas.num.threads",
                                           "smtp",
                                           "mkl",
-                                          "vecLib",
-                                          "vecLibPath",
                                           "pardiso.license",
                                           "keep",
                                           "working.directory",

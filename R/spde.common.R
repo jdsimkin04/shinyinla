@@ -272,7 +272,7 @@ inla.matern.cov <- function(nu, kappa, x, d = 1, corr = FALSE, norm.corr = FALSE
 #' @export
 #' @rdname inla.matern.cov
 inla.matern.cov.s2 <- function(nu, kappa, x, norm.corr = FALSE, theta = 0) {
-    inla.require("orthopolynom", stop.on.error = TRUE)
+    stopifnot(inla.require("orthopolynom"))
     y <- cos(abs(x))
 
     freq.max <- 40L
